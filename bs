@@ -2,16 +2,79 @@
 
 set -e
 
-if [ "$1" = "" ]; then
+function error() {
+    echo -e "\e[1m\e[31m$1\e[0m"
+}
+
+function bold() {
+    echo -e "\e[36m$1\e[0m"
+}
+
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+    echo ""
     echo "bs: Bash build system"
-    echo "Usage: bs {command} {args}"
-    exit 1
+    echo ""
+    echo "usage: bs <command> [<args>]"
+    echo "usage: bs [<default-commmand-args>]"
+    echo ""
+    echo "bs allows you to create build scripts using simple shell scripting:"
+    echo ""
+    echo "1. Create a ./bs directory in your repository root"
+    echo ""
+    echo "2. Implement commands by adding *.sh scripts to ./bs with"
+    echo "   the name of the command. For example:"
+    echo ""
+    bold "   bs publish"
+    echo ""
+    echo "   will call:"
+    echo ""
+    bold "   ./bs/publish.sh"
+    echo ""
+    echo "3. Additional arguments can be passed, and will be received by"
+    echo "   command scripts as \$1, \$2, etc. For example:"
+    echo ""
+    bold "   bs publish --mode Release -v"
+    echo ""
+    echo "   will call:"
+    echo ""
+    bold "   ./bs/publish.sh --mode Release -v"
+    echo ""
+    echo "4. You can define a default script at ./bs/default.sh, which will"
+    echo "   be called when the argument passed for <command> doesn't match"
+    echo "   any script in ./bs."
+    echo ""
+    bold "   bs restore --all --no-cache"
+    echo ""
+    echo "   will call:"
+    echo ""
+    bold "   ./bs/default.sh restore --all --no-cache"
+    echo ""
+    echo "5. That's actually it, its pretty simple."
+    exit 0
 fi
 
+ERROR_BANNER="bs ERROR:"
 SCRIPT_PATH="./bs/$1.sh"
 
-if [ ! -f "$SCRIPT_PATH" ]; then
-    bash "./bs/default.sh" "${@}"
-else
+if [ ! -d ./bs ]; then
+    error "$ERROR_BANNER Expected a build commands directory at ./bs, but none was found"
+    exit 1
+
+elif [ -f "$SCRIPT_PATH" ]; then
     bash "$SCRIPT_PATH" "${@:2}"
+
+elif [ -f "./bs/default.sh" ]; then
+    bash "./bs/default.sh" "${@}"
+
+elif [ "$1" = "" ]; then
+    error "$ERROR_BANNER"
+    error "  * No command was specified"
+    error "  * No default command was found at ./bs/default.sh"
+    exit 1
+
+else
+    error "$ERROR_BANNER"
+    error "  * No file was found for $SCRIPT_PATH"
+    error "  * No default command was found at ./bs/default.sh"
+    exit 1
 fi
