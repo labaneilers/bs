@@ -4,9 +4,21 @@ bs allows you to create build scripts using simple shell scripting.
 
 ## Installation
 
+### Linux, Mac OSX, or Windows WSL
 ```
-git clone {repo} bs
+git clone git@github.firstrepublic.com:leilers/bs.git bs
 sudo bash ./bs/install.sh
+```
+
+### Wndows PowerShell
+
+On Windows, even if you use PowerShell as your terminal, you need a bash shell to run your command scripts. The most commonly available one is [Git BASH](https://gitforwindows.org/) (comes with Git for Windows).
+
+Open PowerShell as administrator, and run:
+
+```
+git clone git@github.firstrepublic.com:leilers/bs.git bs
+.\install.cmd
 ```
 
 ## Usage

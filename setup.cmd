@@ -1,1 +1,0 @@
-copy bs\util\bs.cmd "C:\Program Files\Git\cmd\"
