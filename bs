@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+if [ "$1" = "" ]; then
+    echo "bs: Bash build system"
+    echo "Usage: bs {command} {args}"
+    exit 1
+fi
+
+SCRIPT_PATH="./bs/$1.sh"
+
+if [ ! -f "$SCRIPT_PATH" ]; then
+    bash "./bs/default.sh" "${@}"
+else
+    bash "$SCRIPT_PATH" "${@:2}"
+fi
