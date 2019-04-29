@@ -4,7 +4,7 @@ bs allows you to create build scripts using simple shell scripting.
 
 ## Installation
 
-### Linux, Mac OSX, or Windows WSL
+### For use with bash on Linux, Mac OSX, or Windows (via [WSL](https://docs.microsoft.com/en-us/windows/wsl/about) or [Git BASH](https://gitforwindows.org/))
 ```
 git clone git@github.firstrepublic.com:leilers/bs.git bs
 sudo bash ./bs/install.sh
