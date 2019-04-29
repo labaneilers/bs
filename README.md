@@ -46,7 +46,7 @@ will call:
 
 ### Default commands
 
-You can define a default script at ./bs/default.sh, which will be called when the argument passed for <command> doesn't match any script in ./bs.
+You can define a default script at ./bs/default.sh, which will be called when the argument passed for `<command>` doesn't match any script in ./bs.
 
 ```
 bs restore --all --no-cache
