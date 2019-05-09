@@ -5,6 +5,8 @@ bs allows you to create build scripts using simple shell scripting.
 ## Installation
 
 ### For use with bash on Linux, Mac OSX, or Windows (via [WSL](https://docs.microsoft.com/en-us/windows/wsl/about) or [Git BASH](https://gitforwindows.org/))
+
+Open a bash prompt and run:
 ```
 bash <(curl -s https://raw.githubusercontent.com/labaneilers/bs/master/install.sh)
 ```
@@ -16,7 +18,7 @@ On Windows, even if you use PowerShell as your terminal, you need a bash shell t
 Open PowerShell as administrator, and run:
 
 ```
-. { iwr -useb https://raw.githubusercontent.com/labaneilers/bs/master/install.ps1 } | iex; install
+. { iwr -useb https://raw.githubusercontent.com/labaneilers/bs/master/install.ps1 } | iex
 ```
 
 ## Usage
