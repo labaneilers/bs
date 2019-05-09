@@ -22,7 +22,7 @@ bs is supposed to be the thinnest possible layer on top of straight-up bash scri
 
 `./bs/build.sh`
 
-can be slightly simplified with bs:
+can be made into a bit fewer keystrokes with bs:
 
 `bs build`
 
