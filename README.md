@@ -1,6 +1,6 @@
 # bs: Bash build system
 
-bs allows you to create build scripts using simple shell scripting.
+Use simple bash scripts instead of a "real" build system.
 
 ## Why?
 Pretty much all build systems are terrible in their own special way:
