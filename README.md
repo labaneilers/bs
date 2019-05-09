@@ -16,8 +16,7 @@ On Windows, even if you use PowerShell as your terminal, you need a bash shell t
 Open PowerShell as administrator, and run:
 
 ```
-git clone git@github.firstrepublic.com:leilers/bs.git bs
-.\install.cmd
+. { iwr -useb https://raw.githubusercontent.com/labaneilers/bs/master/install.ps1 } | iex; install
 ```
 
 ## Usage
