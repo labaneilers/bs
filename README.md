@@ -6,7 +6,7 @@ bs allows you to create build scripts using simple shell scripting.
 
 ### For use with bash on Linux, Mac OSX, or Windows (via [WSL](https://docs.microsoft.com/en-us/windows/wsl/about) or [Git BASH](https://gitforwindows.org/))
 ```
-bash <(curl -s https://raw.githubusercontent.com/labaneilers/bs/master/install.sh)
+bash <(curl -s https://gitcdn.link/repo/labaneilers/bs/master/install.sh)
 ```
 
 ### Wndows PowerShell
