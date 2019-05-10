@@ -110,3 +110,11 @@ will call:
 ```
 ./bs/default.sh restore --all --no-cache
 ```
+
+### List all commands
+
+To list all commands available in the current dir:
+
+```
+bs ls
+```
