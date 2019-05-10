@@ -10,12 +10,13 @@ function bold() {
     echo -e "\e[36m$1\e[0m"
 }
 
-if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+if [[ "$1" == *"help"* ]] || [ "$1" = "-h" ]; then
     echo ""
     echo "bs: Bash build system"
     echo ""
     echo "usage: bs <command> [<args>]"
     echo "usage: bs [<default-commmand-args>]"
+    echo "usage: bs ls"
     echo ""
     echo "bs allows you to create build scripts using simple shell scripting:"
     echo ""
@@ -50,6 +51,7 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     bold "   ./bs/default.sh restore --all --no-cache"
     echo ""
     echo "5. That's actually it, its pretty simple."
+    echo ""
     exit 0
 fi
 
@@ -60,7 +62,24 @@ if [ ! -d ./bs ]; then
     error "$ERROR_BANNER Expected a build commands directory at ./bs, but none was found"
     exit 1
 
+elif [ "$1" = "ls" ]; then
+    echo "Available bs commands for this project:"
+    echo ""
+
+    find ./bs -name *.sh -type f -printf "%f\n" | \
+        sed s/.sh$//i | \
+        grep -v "^_" | \
+        grep -v "^default$" | \
+        awk '{print "- " $0}'
+
+    echo ""
+    echo "To get more information on any command, run:"
+    echo ""
+    bold "bs [command] help"
+    echo ""
+
 elif [ -f "$SCRIPT_PATH" ]; then
+    # Slice out first two arguments (bash, script path), and pass to the command script
     bash "$SCRIPT_PATH" "${@:2}"
 
 elif [ -f "./bs/default.sh" ]; then

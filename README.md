@@ -1,6 +1,30 @@
 # bs: Bash build system
 
-Use simple bash scripts instead of a "real" build system.
+Use simple bash scripts instead of a fancy-schmancy build system.
+
+Just put bash scripts in a directory called `bs` at the root of your project:
+
+```
+bs
+├───build.sh
+├───install.sh
+├───run.sh
+└───test.sh
+```
+
+Then run them:
+
+`./bs/build.sh`
+
+You can use arguments too:
+
+`./bs/build.sh debug exclude-tests`
+
+The `bs` command does nothing but remove a few keystrokes:
+
+`bs build debug exclude-tests`
+
+That's it.
 
 ## Why?
 Pretty much all build systems are terrible in their own special way:
@@ -14,19 +38,9 @@ Pretty much all build systems are terrible in their own special way:
 
 Just using bash scripts is an improvement in a few ways:
 
-* Bash is ubiquitous. Between Linux, OSX, and Windows (between Mingw/Cygwin/Git Bash/WSL), its extremely likely that bash is already installed on any environment you use. Because of Git for Windows, practically every Windows developer already has bash installed.
-* Bash is good enough. Its simple and well suited to build scripts. Its simple for simple things, and especially good at running executables, copying files around, or calling scripts in other languages (i.e. node.js or python) for more complex tasks.
-* You probably already know Bash. No one is going to argue its the best language available, but it is a language that pretty much every developer needs to learn at some point, regardless of what languages you specialize in.
-
-bs is supposed to be the thinnest possible layer on top of straight-up bash scripts. Running this:
-
-`./bs/build.sh`
-
-can be made into a bit fewer keystrokes with bs:
-
-`bs build`
-
-That's pretty much it.
+* **Bash is ubiquitous**. Between Linux, OSX, and Windows (between Mingw/Cygwin/Git Bash/WSL), its extremely likely that bash is already installed on any environment you use. Because of Git for Windows, practically every Windows developer already has bash installed.
+* **Bash is good enough**. Its simple and well suited to build scripts. Its simple for simple things, and especially good at running executables, chaining inputs to outputs, copying files around, processing text. If a bash script gets too complex, just use it to call a script in node, python, or whatever language your project is in.
+* **You probably already know Bash**. No one is going to argue its the best language available, but it is something that pretty much every developer needs to learn at some point, regardless of what languages you specialize in.
 
 ## Installation
 
