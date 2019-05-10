@@ -67,6 +67,7 @@ Open PowerShell as administrator, and run:
 ```
 bs <command> [<args>]
 bs [<default-commmand-args>]
+bs ls
 ```
 
 ### Getting started
