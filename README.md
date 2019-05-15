@@ -49,7 +49,7 @@ Just using bash scripts is an improvement in a few ways:
 Open a bash prompt and run:
 
 ```
-bash <(curl -s https://raw.githubusercontent.com/labaneilers/bs/master/install.sh)
+curl -s https://raw.githubusercontent.com/labaneilers/bs/master/install.sh | bash
 ```
 
 ### Windows PowerShell
