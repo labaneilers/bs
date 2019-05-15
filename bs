@@ -10,7 +10,7 @@ function bold() {
     echo -e "\e[36m$1\e[0m"
 }
 
-if [[ "$1" == *"help"* ]] || [ "$1" = "-h" ]; then
+if [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo ""
     echo "bs: Bash build system"
     echo ""
@@ -58,6 +58,20 @@ fi
 ERROR_BANNER="bs ERROR:"
 SCRIPT_PATH="./bs/$1.sh"
 
+function list() {
+    find ./bs -name *.sh -type f -printf "%f\n" | sed s/.sh$//i | grep -v "^_" | grep -v "^default$"
+}
+
+function print-help() {
+    SCRIPT_PATH="./bs/$1.sh"
+    bold "### ${1^}"
+    $SCRIPT_PATH help
+    echo ""
+}
+
+export -f print-help
+export -f bold
+
 if [ ! -d ./bs ]; then
     error "$ERROR_BANNER Expected a build commands directory at ./bs, but none was found"
     exit 1
@@ -66,17 +80,17 @@ elif [ "$1" = "ls" ]; then
     echo "Available bs commands for this project:"
     echo ""
 
-    find ./bs -name *.sh -type f -printf "%f\n" | \
-        sed s/.sh$//i | \
-        grep -v "^_" | \
-        grep -v "^default$" | \
-        awk '{print "- " $0}'
+    list | awk '{print "- " $0}'
 
     echo ""
     echo "To get more information on any command, run:"
     echo ""
     bold "bs [command] help"
     echo ""
+
+elif [ "$1" = "generate-help" ]; then
+
+    list | xargs -n1 -P1 bash -c 'print-help "$@"' _
 
 elif [ -f "$SCRIPT_PATH" ]; then
     # Slice out first two arguments (bash, script path), and pass to the command script

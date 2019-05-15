@@ -1,11 +1,15 @@
 #!/bin/bash
 
-set -e
-
 cd $(dirname "$0")
 
 mkdir -p ~/bin
-curl -s -o ~/bin/bs https://raw.githubusercontent.com/labaneilers/bs/master/bs
+curl -s -f -S -o ~/bin/bs https://raw.githubusercontent.com/labaneilers/bs/master/bs
+ERROR="$?"
+if [ ! "$ERROR" = "0" ]; then
+    echo "Failed to download"
+    exit 1
+fi
+
 chmod +x ~/bin/bs
 
 TESTED=$(which bs)
