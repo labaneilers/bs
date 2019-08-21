@@ -5,12 +5,11 @@ if (! $env:BS_DIR) {
 $source = "https://raw.githubusercontent.com/labaneilers/bs/master"
 
 if (!( test-path $target_dir)) {
-    Write-Error "ERROR: Couldn't find default install dir: $target_dir"
-    Write-Error "You can set the target install dir by setting an environment variable: `$env:BS_DIR"
-    return
+    "ERROR: Couldn't find default install dir: $target_dir"
+    "You can set the target install dir by setting an environment variable: `$env:BS_DIR"
+} else {
+    iwr -uri "$source/bs.cmd" -outfile "$target_dir\bs.cmd"
+    iwr -uri "$source/bs" -outfile "$target_dir\bs.sh"
+
+    "Installed bs at $target_dir\bs.cmd"
 }
-
-iwr -uri "$source/bs.cmd" -outfile "$target_dir\bs.cmd"
-iwr -uri "$source/bs" -outfile "$target_dir\bs.sh"
-
-"Installed bs at $target_dir\bs.cmd"
