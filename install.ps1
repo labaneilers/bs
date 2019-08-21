@@ -7,7 +7,7 @@ $source = "https://raw.githubusercontent.com/labaneilers/bs/master"
 if (!( test-path $target_dir)) {
     "ERROR: Couldn't find default install dir: $target_dir"
     "You can set the target install dir by setting an environment variable: `$env:BS_DIR"
-    exit 1
+    return 1
 }
 
 iwr -uri "$source/bs.cmd" -outfile "$target_dir\bs.cmd"
