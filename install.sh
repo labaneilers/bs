@@ -3,10 +3,12 @@
 cd $(dirname "$0")
 
 if [ "$BS_DIR" = "" ]; then
-    BS_DIR="~/bin"
+    BS_DIR="$HOME/bin"
 fi
 
 BS_BIN_PATH="$BS_DIR/bs"
+
+echo "Installing bs to $BS_BIN_PATH..."
 
 mkdir -p ~/bin
 curl -s -f -S -o "$BS_BIN_PATH" https://raw.githubusercontent.com/labaneilers/bs/master/bs
