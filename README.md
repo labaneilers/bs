@@ -52,6 +52,12 @@ Open a bash prompt and run:
 curl -s https://raw.githubusercontent.com/labaneilers/bs/master/install.sh | bash
 ```
 
+By default, bs will be installed to ~/bin. If you want to install it elsewhere, use the variable BS_BIN_PATH:
+
+```
+BS_BIN_PATH=/usr/local/bin sudo curl -s https://raw.githubusercontent.com/labaneilers/bs/master/install.sh | bash
+```
+
 ### Windows PowerShell
 
 On Windows, even if you use PowerShell as your terminal, you need a bash shell to run your command scripts. The most commonly available one is [Git BASH](https://gitforwindows.org/) (comes with Git for Windows).
