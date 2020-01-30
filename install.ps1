@@ -32,7 +32,7 @@ $cmd_path = "$target_dir\bs.cmd"
 rm -Force $cmd_path
 
 Set-Content -Path $cmd_path -Value "@echo off"
-Set-Content -Path $cmd_path -Value "SET SCRIPT_DIR=%~dp0"
-Set-Content -Path $cmd_path -Value "`"$bash_path`" --login -i -- `"%SCRIPT_DIR%bs.sh`" %*"
+Add-Content -Path $cmd_path -Value "SET SCRIPT_DIR=%~dp0"
+Add-Content -Path $cmd_path -Value "`"$bash_path`" --login -i -- `"%SCRIPT_DIR%bs.sh`" %*"
 
 "Installed bs at $target_dir\bs.cmd"
