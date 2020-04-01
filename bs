@@ -59,7 +59,7 @@ ERROR_BANNER="bs ERROR:"
 SCRIPT_PATH="./bs/$1.sh"
 
 function list() {
-    find ./bs -maxdepth 1 -name "*.sh" -type f -print | sed 's|./bs/||' | sed s/.sh$//i | grep -v "^_" | grep -v "^default$" | sort
+    find ./bs -maxdepth 1 -name "*.sh" -type f -print | sed 's|./bs/||' | sed 's/.sh$//' | grep -v "^_" | grep -v "^default$" | sort
 }
 
 function print-help() {
