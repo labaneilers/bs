@@ -52,10 +52,10 @@ Open a bash prompt and run:
 curl -s https://raw.githubusercontent.com/labaneilers/bs/master/install.sh | bash
 ```
 
-By default, bs will be installed to ~/bin. If you want to install it elsewhere, use the variable BS_BIN_PATH:
+By default, bs will be installed to ~/bin. If you want to install it elsewhere, use the variable BS_DIR:
 
 ```
-sudo BS_BIN_PATH=/usr/local/bin curl -s https://raw.githubusercontent.com/labaneilers/bs/master/install.sh | bash
+sudo BS_DIR=/usr/local/bin curl -s https://raw.githubusercontent.com/labaneilers/bs/master/install.sh | bash
 ```
 
 ### Windows PowerShell
