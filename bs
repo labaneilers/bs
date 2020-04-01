@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -59,7 +59,7 @@ ERROR_BANNER="bs ERROR:"
 SCRIPT_PATH="./bs/$1.sh"
 
 function list() {
-    find ./bs -maxdepth 1 -name "*.sh" -type f -printf "%f\n" | sed s/.sh$//i | grep -v "^_" | grep -v "^default$"
+    find ./bs -maxdepth 1 -name "*.sh" -type f -print | sed s/.sh$//i | grep -v "^_" | grep -v "^default$"
 }
 
 function print-help() {
