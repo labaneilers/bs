@@ -91,7 +91,7 @@ list() {
             cat ./bs/.bs_alias | \
             while read line || [ -n "$line" ]; do
                 [[ $line =~ ^(.*)\  ]] && printf -- "${BASH_REMATCH[1]}"
-                [[ $line =~ \ (.*)$ ]] && verbose " -> ./bs/${BASH_REMATCH[1]}.sh"
+                [[ $line =~ \ (.*)$ ]] && verbose " -> ./bs/${BASH_REMATCH[1]}"
             done
         fi
     ) | \
@@ -127,13 +127,19 @@ main() {
 
     local error_banner="bs ERROR:"
 
+    if [ "$command" = "help" ] || [ "$command" = "--help" ] || [ "$command" = "-h" ]; then
+        show-bs-help
+        exit 0
+    fi
+
+    if [ "$command" = "--version" ] || [ "$command" = "-v" ]; then
+        echo "bs: version 1.2"
+        exit 0
+    fi
+
     if [ ! -d ./bs ]; then
         error "$error_banner Expected a build commands directory at ./bs, but none was found"
         exit 1
-    fi
-
-    if [ "$command" = "help" ] || [ "$command" = "--help" ] || [ "$command" = "-h" ]; then
-        show-bs-help
     fi
 
     if [ "$command" = "ls" ]; then
@@ -149,7 +155,7 @@ main() {
         echo ""
         bold "bs [command] help"
         echo ""
-        exit
+        exit 0
     fi
 
     local script_path=$(get-script-path "$command")
