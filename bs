@@ -2,7 +2,7 @@
 
 set -e
 
-export BS_VERSION="1.2.2"
+export BS_VERSION="1.2.3"
 
 error() {
     echo -e "\e[1m\e[31m$1\e[0m"
