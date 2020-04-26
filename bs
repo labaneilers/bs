@@ -88,15 +88,23 @@ bullet() {
     done
 }
 
+list-dir() {
+    local dir="$1"
+    (
+        cd "$dir"
+        find . -maxdepth 1 -name "*.sh" -type f -print | \
+            sed 's|^./||' | \
+            grep -v "^_" | \
+            grep -v "^default$" |
+            sed 's/.sh$//' | \
+            bullet
+    )
+}
+
 # Prints a list of all available commands
 list() {
     # List files in the bs root dir
-    find ./bs -maxdepth 1 -name "*.sh" -type f -print | \
-        sed 's|^./bs/||' | \
-        grep -v "^_" | \
-        sed 's/.sh$//' | \
-        grep -v "^default$" |
-        bullet
+    list-dir "./bs"
 
     # List aliases in the alias file
     if [ -f ./bs/.bsconfig ]; then
@@ -105,15 +113,7 @@ list() {
             echo
             echo "Commands in ${line}:"
             echo
-            (
-                cd "$line"
-                find . -maxdepth 1 -name "*.sh" -type f -print
-            ) | \
-                while read script_name; do
-                    local command_name=$(echo "$script_name" | sed 's|^./||' | sed 's/.sh$//') 
-                    echo "$command_name"
-                    #verbose " in ${line}"
-                done | bullet
+            list-dir "$line"
         done
     fi
 }
