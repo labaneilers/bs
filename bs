@@ -2,7 +2,7 @@
 
 set -e
 
-export BS_VERSION="1.2.1"
+export BS_VERSION="1.2.2"
 
 error() {
     echo -e "\e[1m\e[31m$1\e[0m"
@@ -73,7 +73,7 @@ get-script-path() {
         return
     fi
 
-    script_path=$(check-aliases "$command")
+    script_path=$(check-subdirs "$command")
 
     if [ ! "$script_path" = "" ]; then
         echo "$script_path"
@@ -82,46 +82,59 @@ get-script-path() {
     fi
 }
 
-# Prints a list of all available commands
-list() {
-    (
-        # List files in the bs root dir
-        find ./bs -maxdepth 1 -name "*.sh" -type f -print 
-
-        # List aliases in the alias file
-        if [ -f ./bs/.bs_alias ]; then
-            cat ./bs/.bs_alias | \
-            while read line || [ -n "$line" ]; do
-                [[ $line =~ ^(.*)\  ]] && printf -- "${BASH_REMATCH[1]}"
-                [[ $line =~ \ (.*)$ ]] && verbose " -> ./bs/${BASH_REMATCH[1]}"
-            done
-        fi
-    ) | \
-        sed 's|./bs/||' | \
-        sed 's/.sh$//' | \
-        grep -v "^_" | \
-        grep -v "^default$" | \
-        sort
+bullet() {
+    while read line; do
+        echo "- $line"
+    done
 }
 
-# Checks the specified command name against the .bs_alias file,
-# and if found, sets the 
-check-aliases() {
+# Prints a list of all available commands
+list() {
+    # List files in the bs root dir
+    find ./bs -maxdepth 1 -name "*.sh" -type f -print | \
+        sed 's|^./bs/||' | \
+        grep -v "^_" | \
+        sed 's/.sh$//' | \
+        grep -v "^default$" |
+        bullet
+
+    # List aliases in the alias file
+    if [ -f ./bs/.bsconfig ]; then
+        cat ./bs/.bsconfig | \
+        while read line || [ -n "$line" ]; do
+            echo
+            echo "Commands in ${line}:"
+            echo
+            (
+                cd "$line"
+                find . -maxdepth 1 -name "*.sh" -type f -print
+            ) | \
+                while read script_name; do
+                    local command_name=$(echo "$script_name" | sed 's|^./||' | sed 's/.sh$//') 
+                    echo "$command_name"
+                    #verbose " in ${line}"
+                done | bullet
+        done
+    fi
+}
+
+# Checks the specified command name against subdirectories in the .bsconfig file
+check-subdirs() {
     local command="$1"
-    if [ ! -f ./bs/.bs_alias ]; then
+    if [ ! -f ./bs/.bsconfig ]; then
         return
     fi
 
-    local alias_file=$(cat ./bs/.bs_alias)
+    local config_file=$(cat ./bs/.bsconfig)
     
-    while read line || [ -n "$line" ]; do
-        if [[ "$line" == "$command "* ]]; then
-            [[ $line =~ \ (.*)$ ]] && echo "${BASH_REMATCH[1]}"
-            return 0
-        fi
-    done << EOF
-$alias_file
-EOF
+    cat ./bs/.bsconfig | 
+        while read line || [ -n "$line" ]; do
+            local script_path="${line}/${command}.sh"
+            if [ -f "$script_path" ]; then
+                echo "$script_path"
+                return 0
+            fi
+        done
 }
 
 main() {
@@ -148,9 +161,7 @@ main() {
         echo "Available bs commands for this project:"
         echo ""
 
-        list | while read line; do
-            echo "- $line"
-        done
+        list
 
         echo ""
         exit 0
@@ -167,7 +178,7 @@ main() {
             error "  * No default command was found at ./bs/default.sh"
         else
             error "  * No file was found for ./bs/${command}.sh"
-            error "  * No alias was found for ${command} in ./bs/.bs_alias"
+            error "  * No file was found for ${command} in any directory in ./bs/.bsconfig"
         fi
         
         exit 1
