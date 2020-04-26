@@ -2,6 +2,8 @@
 
 set -e
 
+export BS_VERSION="1.2.1"
+
 error() {
     echo -e "\e[1m\e[31m$1\e[0m"
 }
@@ -133,7 +135,7 @@ main() {
     fi
 
     if [ "$command" = "--version" ] || [ "$command" = "-v" ]; then
-        echo "bs: version 1.2"
+        echo "bs: version $BS_VERSION"
         exit 0
     fi
 
@@ -150,10 +152,6 @@ main() {
             echo "- $line"
         done
 
-        echo ""
-        echo "To get more information on any command, run:"
-        echo ""
-        bold "bs [command] help"
         echo ""
         exit 0
     fi
