@@ -2,15 +2,20 @@
 
 set -e
 
-function error() {
+error() {
     echo -e "\e[1m\e[31m$1\e[0m"
 }
 
-function bold() {
+bold() {
     echo -e "\e[36m$1\e[0m"
 }
 
-if [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+verbose() {
+    echo -e "\e[1m\e[30m$1\e[0m"
+}
+
+# Print help for bs itself
+show-bs-help() {
     echo ""
     echo "bs: Bash build system"
     echo ""
@@ -53,61 +58,121 @@ if [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "5. That's actually it, its pretty simple."
     echo ""
     exit 0
-fi
-
-ERROR_BANNER="bs ERROR:"
-SCRIPT_PATH="./bs/$1.sh"
-
-function list() {
-    find ./bs -maxdepth 1 -name "*.sh" -type f -print | sed 's|./bs/||' | sed 's/.sh$//' | grep -v "^_" | grep -v "^default$" | sort
 }
 
-function print-help() {
-    SCRIPT_PATH="./bs/$1.sh"
-    bold "### ${1^}"
-    $SCRIPT_PATH help
-    echo ""
+# Converts the specified command to an executable script path
+get-script-path() {
+    local command="$1"
+
+    local script_path="./bs/${command}.sh"
+
+    if [ -f "$script_path" ]; then
+        echo "$script_path"
+        return
+    fi
+
+    script_path=$(check-aliases "$command")
+
+    if [ ! "$script_path" = "" ]; then
+        echo "$script_path"
+    elif [ -f "./bs/default.sh" ]; then
+        echo "./bs/default.sh"
+    fi
 }
 
-export -f print-help
-export -f bold
+# Prints a list of all available commands
+list() {
+    (
+        # List files in the bs root dir
+        find ./bs -maxdepth 1 -name "*.sh" -type f -print 
 
-if [ ! -d ./bs ]; then
-    error "$ERROR_BANNER Expected a build commands directory at ./bs, but none was found"
-    exit 1
+        # List aliases in the alias file
+        if [ -f ./bs/.bs_alias ]; then
+            cat ./bs/.bs_alias | \
+            while read line || [ -n "$line" ]; do
+                [[ $line =~ ^(.*)\  ]] && printf -- "${BASH_REMATCH[1]}"
+                [[ $line =~ \ (.*)$ ]] && verbose " -> ./bs/${BASH_REMATCH[1]}.sh"
+            done
+        fi
+    ) | \
+        sed 's|./bs/||' | \
+        sed 's/.sh$//' | \
+        grep -v "^_" | \
+        grep -v "^default$" | \
+        sort
+}
 
-elif [ "$1" = "ls" ]; then
-    echo "Available bs commands for this project:"
-    echo ""
+# Checks the specified command name against the .bs_alias file,
+# and if found, sets the 
+check-aliases() {
+    local command="$1"
+    if [ ! -f ./bs/.bs_alias ]; then
+        return
+    fi
 
-    list | awk '{print "- " $0}'
+    local alias_file=$(cat ./bs/.bs_alias)
+    
+    while read line || [ -n "$line" ]; do
+        if [[ "$line" == "$command "* ]]; then
+            [[ $line =~ \ (.*)$ ]] && echo "${BASH_REMATCH[1]}"
+            return 0
+        fi
+    done << EOF
+$alias_file
+EOF
+}
 
-    echo ""
-    echo "To get more information on any command, run:"
-    echo ""
-    bold "bs [command] help"
-    echo ""
+main() {
+    local command="$1"
 
-elif [ "$1" = "generate-help" ]; then
+    local error_banner="bs ERROR:"
 
-    list | xargs -n1 -P1 bash -c 'print-help "$@"' _
+    if [ ! -d ./bs ]; then
+        error "$error_banner Expected a build commands directory at ./bs, but none was found"
+        exit 1
+    fi
 
-elif [ -f "$SCRIPT_PATH" ]; then
+    if [ "$command" = "help" ] || [ "$command" = "--help" ] || [ "$command" = "-h" ]; then
+        show-bs-help
+    fi
+
+    if [ "$command" = "ls" ]; then
+        echo "Available bs commands for this project:"
+        echo ""
+
+        list | while read line; do
+            echo "- $line"
+        done
+
+        echo ""
+        echo "To get more information on any command, run:"
+        echo ""
+        bold "bs [command] help"
+        echo ""
+        exit
+    fi
+
+    local script_path=$(get-script-path "$command")
+
+    if [ "$script_path" = "" ]; then
+
+        error "$error_banner"
+
+        if [ "$command" = "" ]; then
+            error "  * No command was specified"
+            error "  * No default command was found at ./bs/default.sh"
+        else
+            error "  * No file was found for ./bs/${command}.sh"
+            error "  * No alias was found for ${command} in ./bs/.bs_alias"
+        fi
+        
+        exit 1
+    fi
+
     # Slice out first two arguments (bash, script path), and pass to the command script
-    bash "$SCRIPT_PATH" "${@:2}"
+    bash "$script_path" "${@:2}"
+}
 
-elif [ -f "./bs/default.sh" ]; then
-    bash "./bs/default.sh" "${@}"
+main "$@"
 
-elif [ "$1" = "" ]; then
-    error "$ERROR_BANNER"
-    error "  * No command was specified"
-    error "  * No default command was found at ./bs/default.sh"
-    exit 1
 
-else
-    error "$ERROR_BANNER"
-    error "  * No file was found for $SCRIPT_PATH"
-    error "  * No default command was found at ./bs/default.sh"
-    exit 1
-fi
