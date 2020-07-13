@@ -29,7 +29,10 @@ if (!(Test-Path $bash_path)) {
 }
 
 $cmd_path = "$target_dir\bs.cmd"
-rm -Force $cmd_path
+
+if (Test-Path $cmd_path) {
+    rm -Force $cmd_path
+}
 
 Set-Content -Path $cmd_path -Value "@echo off"
 Add-Content -Path $cmd_path -Value "SET SCRIPT_DIR=%~dp0"
